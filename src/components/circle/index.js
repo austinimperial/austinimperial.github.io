@@ -19,11 +19,6 @@ function Circle({circle,i}) {
       setIsOver(true)
     }
 
-    const handleMouseLeave = () => {
-      setIsOver(false)
-      unHighlightAll()
-    }
-
     const handleMouseDown = () => {
       setCurrentCircle(i)
       setSelectedCircle(i)
@@ -40,7 +35,7 @@ function Circle({circle,i}) {
           onMouseUp={() => setCurrentCircle(null)}
 
           onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          onMouseLeave={unHighlightAll}
 
           isHovering={circle.isHovering}
           selected={i === selectedCircle}

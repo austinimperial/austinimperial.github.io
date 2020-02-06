@@ -15,7 +15,6 @@ function Lines() {
             if (newPoints.length > 0) newPoints.push(newPoints[0])
             const result = newPoints.reduce((total,currentValue,currentIndex) => {
                   if (currentIndex === 0) {
-                        console.log(`M ${currentValue.x} ${currentValue.y}`)
                         return total + `M ${currentValue.x} ${currentValue.y}`
                   }
 
@@ -38,6 +37,3 @@ function Lines() {
 }
 
 export default Lines
-
-// select mode and add mode
-// find isOverBackground, to update isOver

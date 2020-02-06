@@ -8,9 +8,11 @@ function SvgElementsProvider({children}) {
     const [circles,setCircles] = useState([])
     const [mouseDown,setMouseDown] = useState(false)
     const [isOver,setIsOver] = useState(false)
+    const [isOverMenu,setIsOverMenu] = useState(false)
     const [currentCircle,setCurrentCircle] = useState(null)
     const [selectedCircle,setSelectedCircle] = useState(null) 
     const [linePath,setLinePath] = useState("")
+    const [canAdd,setCanAdd] = useState(true)
 
     useEffect(() => {
 
@@ -20,17 +22,19 @@ function SvgElementsProvider({children}) {
 
         window.addEventListener('keydown',handleDelete)
         return () => window.removeEventListener('keydown',handleDelete)
-    })
+    },[selectedCircle])
 
     useEffect(() => {
 
         const addCircle = _.throttle(e => {
-            if (!isOver) setCircles(prevCircles => [...prevCircles,{x: e.clientX, y: e.clientY}])
+            if (!isOver && !isOverMenu && canAdd) {
+                setCircles(prevCircles => [...prevCircles,{x: e.clientX, y: e.clientY}])
+            }
         },50)
 
         window.addEventListener('click', addCircle)
         return () => window.removeEventListener('click', addCircle)
-    },[isOver]) 
+    },[isOver,canAdd,isOverMenu]) 
 
     useEffect(() => {
 
@@ -41,7 +45,7 @@ function SvgElementsProvider({children}) {
         window.addEventListener('mousemove', move)
         return () => window.removeEventListener('mousemove',move)
 
-    },[mouseDown,currentCircle,isOver])
+    },[mouseDown,currentCircle])
 
     const updateCircle = (i,changes) => {
         const newCircles = [...circles]
@@ -73,7 +77,9 @@ function SvgElementsProvider({children}) {
         selectedCircle,setSelectedCircle,
         unHighlightAll,
         updateCircle,
-        linePath,setLinePath
+        linePath,setLinePath,
+        isOverMenu,setIsOverMenu,
+        canAdd,setCanAdd
     }
 
     return (

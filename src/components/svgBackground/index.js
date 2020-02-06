@@ -2,22 +2,29 @@ import React, { useContext } from 'react'
 import Circle from 'components/circle/index'
 import { SvgElementsContext } from 'globalState/SvgElementsProvider'
 import Lines from 'components/lines/index'
-
 import {
-    StyledBackgroundSVG
+    StyledContainerSVG,
+    StyledBackgroundRect
 } from './styles'
+import Logo from './logo'
+const _ = require('lodash')
 
 function SvgBackground() {
 
     // global state
-    const {setMouseDown,circles} = useContext(SvgElementsContext)
+    const {setMouseDown,circles,setIsOver} = useContext(SvgElementsContext)
 
     return (
         <div
+            style={{'position':'absolute'}}
             onMouseDown={() => setMouseDown(true)}
             onMouseUp={() => setMouseDown(false)}
         >
-            <StyledBackgroundSVG>
+            <StyledContainerSVG>
+                <StyledBackgroundRect
+                    onMouseMove={_.throttle(() => setIsOver(false),50)}
+                />
+                <Logo />
                 <Lines />
                 {
                     circles.map((circle,i) => {
@@ -29,8 +36,9 @@ function SvgBackground() {
                             />
                         )
                     })
-                }
-            </StyledBackgroundSVG>
+                }               
+            </StyledContainerSVG>
+
         </div>
     )
 }
