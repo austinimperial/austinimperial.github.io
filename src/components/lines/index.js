@@ -1,9 +1,10 @@
 import React, { useContext, useEffect} from 'react'
 import { SvgElementsContext } from 'globalState/SvgElementsProvider'
+
 function Lines() {
       
       // global state
-      const {circles,linePath,setLinePath} = useContext(SvgElementsContext)
+      const {points,linePath,setLinePath} = useContext(SvgElementsContext)
 
       const createSVGPathString = (pointList) => {
             // consumes a list of objects [ {x:value, y:value}...]
@@ -12,10 +13,13 @@ function Lines() {
             // are connected by lines.
       
             const newPoints = [...pointList]
+
+            // add duplicate of first point to the end of the array
             if (newPoints.length > 0) newPoints.push(newPoints[0])
+
             const result = newPoints.reduce((total,currentValue,currentIndex) => {
                   if (currentIndex === 0) {
-                        return total + `M ${currentValue.x} ${currentValue.y}`
+                        return `M ${currentValue.x} ${currentValue.y}`
                   }
 
                   return total + ` L ${currentValue.x} ${currentValue.y}`
@@ -24,12 +28,12 @@ function Lines() {
       }
 
       useEffect(() => {
-            createSVGPathString(circles)
-      },[circles])
+            createSVGPathString(points)
+      },[points])
 
       return (
             <path 
-                  stroke="black" 
+                  stroke="#f53dff" 
                   fill="none"
                   d={linePath}
             />

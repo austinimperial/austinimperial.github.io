@@ -1,19 +1,25 @@
 import React, { useContext } from 'react'
-import {
-    StyledContainer,
-    StyledMenuButton
-} from './styles'
+import { StyledContainer } from './styles'
+import { StyledMenuButton } from 'components/controlMenu/shared/sharedStyles'
 import ToggleButton from 'components/controlMenu/toggleButton/index'
 import { SvgElementsContext } from 'globalState/SvgElementsProvider'
+import ClearButton from 'components/controlMenu/clearButton/index'
 
 function ControlMenu() {
 
     // global state
-    const {setIsOverMenu,setCircles,canAdd,setCanAdd} = useContext(SvgElementsContext)
+    const {
+        setIsOverMenu,
+        canAdd,setPoints,setShowLines,
+        showLines,toggleLines,
+        toggleCanAdd,setCanAdd,
+        melt
+    } = useContext(SvgElementsContext)
 
     const handleClearClick = () => {
-        setCircles([])
+        setPoints([])
         setCanAdd(true)
+        setShowLines(true)
     }
 
     return (
@@ -22,17 +28,26 @@ function ControlMenu() {
             onMouseLeave={() => setIsOverMenu(false)}
         >
             <ToggleButton 
-                label="add more points"
-                onClick={() => setCanAdd(prevCanAdd => !prevCanAdd)}
-                initial={canAdd}
+                label="add points"
+                containerStyle={{'margin':'10px 0px 0px 0px'}}
+                onClick={toggleCanAdd}
+                value={canAdd}
+            />
+            <ToggleButton 
+                label="show lines"
+                containerStyle={{'margin':'10px 0px 0px 0px'}}
+                onClick={toggleLines}
+                value={showLines}
+            />
+            <ClearButton 
+                onClick={handleClearClick}
+                containerStyle={{'margin':'10px 0px 0px 0px','minHeight':'32px'}}
             />
             <StyledMenuButton
-                onClick={handleClearClick}
+                style={{'margin':'10px 0px 0px 0px'}}
+                onClick={() => melt()}
             >
-                clear
-            </StyledMenuButton>
-            <StyledMenuButton>
-                blobify
+                melt
             </StyledMenuButton>
         </StyledContainer>
     )

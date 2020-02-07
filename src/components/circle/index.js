@@ -29,7 +29,7 @@ function Circle({circle,i}) {
           cx={circle.x} 
           cy={circle.y} 
           r="10" 
-          fill="black"
+          fill="#6b6a6a"
 
           onMouseDown={handleMouseDown}
           onMouseUp={() => setCurrentCircle(null)}

@@ -5,17 +5,18 @@ import {
     StyledText
 } from './styles'
 
-function ToggleButton({initial, ...rest}) {
+function ToggleButton({value,label,containerStyle, ...rest}) {
 
     // local state
-    const [isOn,setIsOn] = useState(initial || true)
+    const [isOn,setIsOn] = useState(value || true)
 
     useEffect(() => {
-        if (isOn !== initial) setIsOn(prevIsOn => !prevIsOn)
+        if (isOn !== value) setIsOn(prevIsOn => !prevIsOn)
     })
 
     return (
         <StyledContainer
+            style={containerStyle}
             {...rest}
         >
             <StyledToggleButton
@@ -24,7 +25,7 @@ function ToggleButton({initial, ...rest}) {
             >
 
             </StyledToggleButton>  
-            <StyledText>add points</StyledText>
+            <StyledText>{label}</StyledText>
         </StyledContainer>
     )
 }

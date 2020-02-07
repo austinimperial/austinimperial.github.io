@@ -2,6 +2,8 @@ import React, { useContext } from 'react'
 import Circle from 'components/circle/index'
 import { SvgElementsContext } from 'globalState/SvgElementsProvider'
 import Lines from 'components/lines/index'
+import GuideLines from 'components/guideLines/index'
+import Blob from 'components/blob/index'
 import {
     StyledContainerSVG,
     StyledBackgroundRect
@@ -12,7 +14,14 @@ const _ = require('lodash')
 function SvgBackground() {
 
     // global state
-    const {setMouseDown,circles,setIsOver} = useContext(SvgElementsContext)
+    const {
+        setMouseDown,
+        points,
+        setIsOver,
+        setSelectedCircle,
+        showLines,
+        canAdd
+    } = useContext(SvgElementsContext)
 
     return (
         <div
@@ -23,11 +32,18 @@ function SvgBackground() {
             <StyledContainerSVG>
                 <StyledBackgroundRect
                     onMouseMove={_.throttle(() => setIsOver(false),50)}
+                    onClick={() => {
+                        setIsOver(false)
+                        if (!canAdd) setSelectedCircle(null)
+                    }}
                 />
                 <Logo />
-                <Lines />
+                <Blob />
+                {showLines && <Lines />}
+                {(showLines && canAdd) && <GuideLines />}  
                 {
-                    circles.map((circle,i) => {
+                    showLines &&
+                    points.map((circle,i) => {
                         return (
                             <Circle 
                                 key={Math.random()}
@@ -36,7 +52,7 @@ function SvgBackground() {
                             />
                         )
                     })
-                }               
+                }             
             </StyledContainerSVG>
 
         </div>
