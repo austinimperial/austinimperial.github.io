@@ -22,15 +22,14 @@ function GuideLines() {
 
     const getNextCircleIndex = useCallback(() => {
         if (selectedCircle === null) return points.length-1
-        if (selectedCircle === 0) return points.length-1
-        return selectedCircle - 1
+        if (selectedCircle === points.length-1) return 0
+        return selectedCircle + 1
     },[points,selectedCircle])
 
     if (points.length < 2) return <></>
 
-    try {
-        return (
-            <path 
+    return (
+        <path 
             d={`
                 M 
                 ${points[selectedCircle === null ? 0 : selectedCircle].x} 
@@ -45,12 +44,7 @@ function GuideLines() {
             stroke="#f53dff"
             strokeDasharray="10,10"
         />
-        )        
-    } catch(err) {
-        console.log(selectedCircle)
-        return <></>
-    }
-
+    )        
 }
 
 export default GuideLines

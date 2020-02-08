@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { StyledMenuButton } from 'components/controlMenu/shared/sharedStyles'
+import { SvgElementsContext } from 'globalState/SvgElementsProvider'
 import { 
     StyledContainer,
     StyledConfirmButton,
@@ -8,12 +9,16 @@ import {
 
 function ClearButton({containerStyle,onClick}) {
 
+    // global state
+    const {setSelectedCircle} = useContext(SvgElementsContext)
+
     // local state
     const [confirm,setConfirm] = useState(false)
 
     const handleConfirmClick = () => {
         onClick()
         setConfirm(false)
+        setSelectedCircle(null)
     }
 
     if (!confirm) {

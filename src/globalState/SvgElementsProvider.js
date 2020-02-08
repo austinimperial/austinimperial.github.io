@@ -53,14 +53,16 @@ function SvgElementsProvider({children}) {
         const addCircle = _.throttle(e => {
             if (!isOver && !isOverMenu && canAdd) {
                 setPoints(prevPoints => {
+                    if (selectedCircle === null) return [...prevPoints,{x: e.clientX, y: e.clientY}]
 
-                    if (selectedCircle === 0) {
-                        setSelectedCircle(0)
-                        return [{x: e.clientX, y: e.clientY}, ...prevPoints]
+                    if (selectedCircle === prevPoints.length-1) {
+                        setSelectedCircle(prevPoints.length)
+                        return [...prevPoints,{x: e.clientX, y: e.clientY}]
                     }
 
                     const newPoints = [...prevPoints]
-                    newPoints.splice(selectedCircle ,0,{x: e.clientX, y: e.clientY})
+                    setSelectedCircle(selectedCircle + 1)
+                    newPoints.splice(selectedCircle + 1, 0, {x: e.clientX, y: e.clientY})
                     return newPoints
                 })
             }
@@ -98,8 +100,8 @@ function SvgElementsProvider({children}) {
     const deleteCircle = (i) => {
         const newCircles = [...points]
         newCircles.splice(i,1)
-        setPoints(newCircles)
         setSelectedCircle(null)
+        setPoints(newCircles)
         setIsOver(false)
     }
 
