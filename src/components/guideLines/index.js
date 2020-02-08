@@ -21,30 +21,36 @@ function GuideLines() {
     },[points])
 
     const getNextCircleIndex = useCallback(() => {
-        if (!selectedCircle) return points.length-1
-        if (selectedCircle === points.length-1) return 0
-        return selectedCircle + 1
+        if (selectedCircle === null) return points.length-1
+        if (selectedCircle === 0) return points.length-1
+        return selectedCircle - 1
     },[points,selectedCircle])
 
-    if (points.length < 2 || !points) return <></>
+    if (points.length < 2) return <></>
 
-    return (
-        <path 
-        d={`
-            M 
-            ${points[selectedCircle || 0].x} 
-            ${points[selectedCircle || 0].y} 
-            L 
-            ${cursorCoords.x || 0}
-            ${cursorCoords.y || 0}
-            L 
-            ${points[getNextCircleIndex()].x || 0}
-            ${points[getNextCircleIndex()].y || 0}
-        `}
-        stroke="#f53dff"
-        strokeDasharray="10,10"
-    />
-    )
+    try {
+        return (
+            <path 
+            d={`
+                M 
+                ${points[selectedCircle === null ? 0 : selectedCircle].x} 
+                ${points[selectedCircle === null ? 0 : selectedCircle].y} 
+                L 
+                ${cursorCoords.x}
+                ${cursorCoords.y}
+                L 
+                ${points[getNextCircleIndex()].x}
+                ${points[getNextCircleIndex()].y}
+            `}
+            stroke="#f53dff"
+            strokeDasharray="10,10"
+        />
+        )        
+    } catch(err) {
+        console.log(selectedCircle)
+        return <></>
+    }
+
 }
 
 export default GuideLines

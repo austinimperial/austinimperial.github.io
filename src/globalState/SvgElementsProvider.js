@@ -53,25 +53,28 @@ function SvgElementsProvider({children}) {
         const addCircle = _.throttle(e => {
             if (!isOver && !isOverMenu && canAdd) {
                 setPoints(prevPoints => {
-                    //console.log(selectedCircle)
-                    //return [...prevPoints,{x: e.clientX, y: e.clientY}]
+
+                    if (selectedCircle === 0) {
+                        setSelectedCircle(0)
+                        return [{x: e.clientX, y: e.clientY}, ...prevPoints]
+                    }
+
                     const newPoints = [...prevPoints]
-                    if (!selectedCircle) return [...prevPoints,{x: e.clientX, y: e.clientY}]
-                    newPoints.splice(selectedCircle+1,0,{x: e.clientX, y: e.clientY})
+                    newPoints.splice(selectedCircle ,0,{x: e.clientX, y: e.clientY})
                     return newPoints
                 })
             }
-        },50)
+        },60)
 
         window.addEventListener('click', addCircle)
         return () => window.removeEventListener('click', addCircle)
-    },[isOver,canAdd,isOverMenu,selectedCircle]) 
+    },[isOver,canAdd,isOverMenu,selectedCircle,points]) 
 
     useEffect(() => {
 
         const move = _.throttle(e => {
             if (mouseDown) updateCircle(currentCircle,{x:e.pageX,y:e.pageY}) 
-        },30)
+        },40)
 
         window.addEventListener('mousemove', move)
         return () => window.removeEventListener('mousemove',move)
