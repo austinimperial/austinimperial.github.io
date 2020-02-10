@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { restElement } from '@babel/types'
+import { getMidpoints } from './midpoints'
+import { getCentroids } from './centroids'
+import { createBlobPath } from './createBlobPath'
+import { getBounds } from './getBounds'
+import { adjustBlobPath } from './adjustBlobPath'
+import { createSvgString } from './createSvgString'
 export const SvgElementsContext = React.createContext()
 const _ = require('lodash')
+const fileDownload = require('js-file-download')
 
 function SvgElementsProvider({children}) {
 
@@ -17,21 +23,8 @@ function SvgElementsProvider({children}) {
     const [linePath,setLinePath] = useState("")
     const [canAdd,setCanAdd] = useState(true)
     const [showLines,setShowLines] = useState(true)
+    const [downloadPrompt,setDownloadPrompt] = useState(false)
 
-    const getMidpoint = (point1,point2) => {
-        return {
-            x: (point1.x + point2.x) / 2, 
-            y: (point1.y + point2.y) / 2
-        }
-    }
-
-    const getMidpoints = (pointList) => {
-        const newMidpoints = pointList.map((point,i) => {
-            if (i === pointList.length-1) return getMidpoint(pointList[0],point)
-            return getMidpoint(point, pointList[i+1])
-        })
-        return newMidpoints
-    }
 
     useEffect(() => {
         setMidpoints(getMidpoints(points))
@@ -96,7 +89,16 @@ function SvgElementsProvider({children}) {
         })
     }
 
+    const handleClearClick = () => {
+        setPoints([])
+        setCanAdd(true)
+        setShowLines(true)
+        setDownloadPrompt(false)
+    }
+
     const deleteCircle = (i) => {
+        if (i === null || i === undefined) return 
+        if (downloadPrompt) return
         const newCircles = [...points]
         newCircles.splice(i,1)
         setSelectedCircle(null)
@@ -114,88 +116,17 @@ function SvgElementsProvider({children}) {
         setShowLines(prevShowLines => !prevShowLines ? true : prevShowLines)
     }
 
-    const getCentroid = (p1,p2,p3) => {
-        return (
-            {
-                x: (p1.x + p2.x + p3.x) / 3,
-                y: (p1.y + p2.y + p3.y) / 3
-            }
-        )
-    }
-
     const melt = () => {
-        let newPoints = [...points]
-        const lastPoint = newPoints[newPoints.length-1]
-        newPoints = newPoints.map((point,i) => {
-            if (i === 0) return getCentroid(lastPoint,point,newPoints[i+1])
-            if (i === newPoints.length-1) return getCentroid(newPoints[i-1],point,newPoints[0])
-            return getCentroid(newPoints[i-1],point,newPoints[i+1])
-        })
+        const newPoints = getCentroids(points)
         setPoints(newPoints)
     }
 
-    const createBlobPath = (points,midpoints) => {
-        // consumes a list of objects [ {x:value, y:value}...]
-        // outputs an SVG path d attribute, which is a string.
-        // the result is that all the points in the pointList
-        // are connected by lines.
-  
-        const newMidpoints = [...midpoints]
-        
-        const result = newMidpoints.reduce((total,currentValue,currentIndex) => {
-            const lastMidPoint = newMidpoints[newMidpoints.length-1]
-            if (currentValue === undefined) return
-            if (currentIndex === 0) {
-                    return total + (
-                        `M 
-                            ${lastMidPoint.x} 
-                            ${lastMidPoint.y} 
-                        Q   
-                            ${points[0].x} 
-                            ${points[0].y} 
-                            ${currentValue.x} 
-                            ${currentValue.y}
-                        `
-                    )
-            }
-
-            return total + (
-                ` Q 
-                    ${points[currentIndex].x} 
-                    ${points[currentIndex].y} 
-                    ${currentValue.x} 
-                    ${currentValue.y}
-                `  
-            )
-
-        },"")
-        const pretty = result.replace(/\s{1,}/g, " ")
-        return pretty
-    }
-
-    const getBounds = () => {
-        if (points.length === 0) return {}
-        const xValues = points.map(point => point.x)
-        const yValues = points.map(point => point.y)
-        return {
-            xMax: Math.max(...xValues),
-            xMin: Math.min(...xValues),
-            yMax: Math.max(...yValues),
-            yMin: Math.min(...yValues),
-        }
-    }
-
-    const adjustBlobPath = () => {
-        const {xMin, yMin} = getBounds()
-        const newPoints = points.map(point => {
-            return {
-                x: point.x - xMin,
-                y: point.y - yMin
-            }
-        })
-        const midpoints = getMidpoints(newPoints)
-        console.log(newPoints)
-        return createBlobPath(newPoints,midpoints)
+    const download = (filename) => {
+        const {xMax,xMin,yMax,yMin} = getBounds(points)
+        const blobPath = adjustBlobPath(points)
+        const svgString = createSvgString(blobPath, xMax-xMin, yMax-yMin)
+        const saveAsFilename = `${filename === '' ? 'blob' : filename}.svg`
+        fileDownload(svgString,saveAsFilename)
     }
 
     const value = {
@@ -215,7 +146,11 @@ function SvgElementsProvider({children}) {
         setShowLines,
         toggleCanAdd,melt,
         createBlobPath,
-        getBounds,adjustBlobPath
+        adjustBlobPath,
+        getBounds,
+        download,
+        handleClearClick,
+        downloadPrompt,setDownloadPrompt
     }
 
     return (

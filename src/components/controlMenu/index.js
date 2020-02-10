@@ -1,40 +1,22 @@
 import React, { useContext } from 'react'
 import { StyledContainer } from './styles'
 import { StyledMenuButton } from 'components/controlMenu/shared/sharedStyles'
+import DownloadButton from 'components/controlMenu/downloadButton/index'
 import ToggleButton from 'components/controlMenu/toggleButton/index'
 import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
 import ClearButton from 'components/controlMenu/clearButton/index'
-const fileDownload = require('js-file-download');
 
 function ControlMenu() {
 
     // global state
     const {
         setIsOverMenu,
-        canAdd,setPoints,setShowLines,
+        canAdd,
         showLines,toggleLines,
-        toggleCanAdd,setCanAdd,
-        melt,getBounds,adjustBlobPath
+        toggleCanAdd,
+        melt,
+        handleClearClick
     } = useContext(SvgElementsContext)
-
-    const handleClearClick = () => {
-        setPoints([])
-        setCanAdd(true)
-        setShowLines(true)
-    }
-
-    const createSvgString = (blobPath,xMax,yMax) => {
-        const result = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-            <svg 
-                viewBox='0 0 ${xMax} ${yMax}' 
-                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" 
-            >
-                <path fill='black' stroke="black" d='${blobPath}'/>
-            </svg>
-        `
-        const pretty = result.replace(/\s{1,}/, " ")
-        return pretty
-    }
 
     return (
         <StyledContainer
@@ -53,26 +35,17 @@ function ControlMenu() {
                 onClick={toggleLines}
                 value={showLines}
             />
-            <ClearButton 
-                onClick={handleClearClick}
-                containerStyle={{'margin':'10px 0px 0px 0px','minHeight':'32px'}}
-            />
             <StyledMenuButton
                 style={{'margin':'10px 0px 0px 0px'}}
                 onClick={() => melt()}
             >
                 melt
             </StyledMenuButton>
-            <StyledMenuButton
-                style={{'margin':'10px 0px 0px 0px'}}
-                onClick={() => {
-                    const {xMax,xMin,yMax,yMin} = getBounds()
-                    const blobPath = adjustBlobPath()
-                    fileDownload(createSvgString(blobPath, xMax-xMin, yMax-yMin), 'blob.svg')
-                }}
-            >
-                download
-            </StyledMenuButton>
+            <ClearButton 
+                onClick={handleClearClick}
+                containerStyle={{'margin':'60px 0px 0px 0px','minHeight':'32px'}}
+            />
+            <DownloadButton />
         </StyledContainer>
     )
 }

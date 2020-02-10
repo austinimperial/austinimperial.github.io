@@ -20,7 +20,8 @@ function SvgBackground() {
         setIsOver,
         setSelectedCircle,
         showLines,
-        canAdd
+        canAdd,
+        setDownloadPrompt,
     } = useContext(SvgElementsContext)
 
     return (
@@ -28,6 +29,7 @@ function SvgBackground() {
             style={{'position':'absolute'}}
             onMouseDown={() => setMouseDown(true)}
             onMouseUp={() => setMouseDown(false)}
+            onClick={() => setDownloadPrompt(false)}
         >
             <StyledContainerSVG>
                 <StyledBackgroundRect
