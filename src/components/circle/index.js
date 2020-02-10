@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { SvgElementsContext } from 'globalState/SvgElementsProvider'
+import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
 import { StyledCircle } from './styles'
 
 function Circle({circle,i}) {

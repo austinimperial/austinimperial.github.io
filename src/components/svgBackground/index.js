@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import Circle from 'components/circle/index'
-import { SvgElementsContext } from 'globalState/SvgElementsProvider'
+import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
 import Lines from 'components/lines/index'
 import GuideLines from 'components/guideLines/index'
 import Blob from 'components/blob/index'

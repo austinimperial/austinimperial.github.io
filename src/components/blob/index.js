@@ -1,51 +1,13 @@
 import React, { useContext, useEffect} from 'react'
-import { SvgElementsContext } from 'globalState/SvgElementsProvider'
+import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
 
 function Blob() {
       
       // global state
-      const {points,midpoints,blobPath,setBlobPath,setIsOver} = useContext(SvgElementsContext)
-
-      const createSVGPathString = (pointList,midpointList) => {
-            // consumes a list of objects [ {x:value, y:value}...]
-            // outputs an SVG path d attribute, which is a string.
-            // the result is that all the points in the pointList
-            // are connected by lines.
-      
-            const newMidpoints = [...midpointList]
-            
-            const result = newMidpoints.reduce((total,currentValue,currentIndex) => {
-                const lastMidPoint = newMidpoints[newMidpoints.length-1]
-                if (currentValue === undefined) return
-                if (currentIndex === 0) {
-                        return total + (
-                            `M 
-                                ${lastMidPoint.x} 
-                                ${lastMidPoint.y} 
-                            Q   
-                                ${points[0].x} 
-                                ${points[0].y} 
-                                ${currentValue.x} 
-                                ${currentValue.y}
-                            `
-                        )
-                }
-
-                return total + (
-                    ` Q 
-                        ${pointList[currentIndex].x} 
-                        ${pointList[currentIndex].y} 
-                        ${currentValue.x} 
-                        ${currentValue.y}
-                    `  
-                )
-
-            },"")
-            setBlobPath(result)
-      }
+      const {points,midpoints,blobPath,setBlobPath,setIsOver,createBlobPath} = useContext(SvgElementsContext)
 
       useEffect(() => {
-            createSVGPathString(points,midpoints)
+            setBlobPath(createBlobPath(points,midpoints))
       },[midpoints])
 
       return (

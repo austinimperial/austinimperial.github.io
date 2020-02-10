@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react'
-import { SvgElementsContext } from 'globalState/SvgElementsProvider'
+import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
 const _ = require('lodash')
 
 function GuideLines() {

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { StyledMenuButton } from 'components/controlMenu/shared/sharedStyles'
-import { SvgElementsContext } from 'globalState/SvgElementsProvider'
+import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
 import { 
     StyledContainer,
     StyledConfirmButton,

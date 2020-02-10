@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const StyledContainer = styled.div`
     display: flex;
     align-items: center;
-    box-sizing; border-box;
+    box-sizing: border-box;
 `
 
 export const StyledConfirmButton = styled.button`

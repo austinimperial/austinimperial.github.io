@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { restElement } from '@babel/types'
 export const SvgElementsContext = React.createContext()
 const _ = require('lodash')
 
@@ -17,25 +18,23 @@ function SvgElementsProvider({children}) {
     const [canAdd,setCanAdd] = useState(true)
     const [showLines,setShowLines] = useState(true)
 
+    const getMidpoint = (point1,point2) => {
+        return {
+            x: (point1.x + point2.x) / 2, 
+            y: (point1.y + point2.y) / 2
+        }
+    }
+
+    const getMidpoints = (pointList) => {
+        const newMidpoints = pointList.map((point,i) => {
+            if (i === pointList.length-1) return getMidpoint(pointList[0],point)
+            return getMidpoint(point, pointList[i+1])
+        })
+        return newMidpoints
+    }
+
     useEffect(() => {
-
-        const getMidpoint = (point1,point2) => {
-            return {
-                x: (point1.x + point2.x) / 2, 
-                y: (point1.y + point2.y) / 2
-            }
-        }
-
-        const getMidpoints = (pointList) => {
-            const newMidpoints = pointList.map((point,i) => {
-                if (i === pointList.length-1) return getMidpoint(pointList[0],point)
-                return getMidpoint(point, pointList[i+1])
-            })
-            setMidpoints(newMidpoints)
-        }
-
-        getMidpoints(points)
-
+        setMidpoints(getMidpoints(points))
     },[points])
 
     useEffect(() => {
@@ -135,6 +134,70 @@ function SvgElementsProvider({children}) {
         setPoints(newPoints)
     }
 
+    const createBlobPath = (points,midpoints) => {
+        // consumes a list of objects [ {x:value, y:value}...]
+        // outputs an SVG path d attribute, which is a string.
+        // the result is that all the points in the pointList
+        // are connected by lines.
+  
+        const newMidpoints = [...midpoints]
+        
+        const result = newMidpoints.reduce((total,currentValue,currentIndex) => {
+            const lastMidPoint = newMidpoints[newMidpoints.length-1]
+            if (currentValue === undefined) return
+            if (currentIndex === 0) {
+                    return total + (
+                        `M 
+                            ${lastMidPoint.x} 
+                            ${lastMidPoint.y} 
+                        Q   
+                            ${points[0].x} 
+                            ${points[0].y} 
+                            ${currentValue.x} 
+                            ${currentValue.y}
+                        `
+                    )
+            }
+
+            return total + (
+                ` Q 
+                    ${points[currentIndex].x} 
+                    ${points[currentIndex].y} 
+                    ${currentValue.x} 
+                    ${currentValue.y}
+                `  
+            )
+
+        },"")
+        const pretty = result.replace(/\s{1,}/g, " ")
+        return pretty
+    }
+
+    const getBounds = () => {
+        if (points.length === 0) return {}
+        const xValues = points.map(point => point.x)
+        const yValues = points.map(point => point.y)
+        return {
+            xMax: Math.max(...xValues),
+            xMin: Math.min(...xValues),
+            yMax: Math.max(...yValues),
+            yMin: Math.min(...yValues),
+        }
+    }
+
+    const adjustBlobPath = () => {
+        const {xMin, yMin} = getBounds()
+        const newPoints = points.map(point => {
+            return {
+                x: point.x - xMin,
+                y: point.y - yMin
+            }
+        })
+        const midpoints = getMidpoints(newPoints)
+        console.log(newPoints)
+        return createBlobPath(newPoints,midpoints)
+    }
+
     const value = {
         points,setPoints,
         mouseDown,setMouseDown,
@@ -150,7 +213,9 @@ function SvgElementsProvider({children}) {
         blobPath,setBlobPath,
         showLines,toggleLines,
         setShowLines,
-        toggleCanAdd,melt
+        toggleCanAdd,melt,
+        createBlobPath,
+        getBounds,adjustBlobPath
     }
 
     return (

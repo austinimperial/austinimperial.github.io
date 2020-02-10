@@ -13,6 +13,7 @@ export const StyledMenuButton = styled.button`
     outline: none;
     border-radius: 20px;
     transition: all 0.1s ease-in;
+    min-width: 0;
 
     :hover {
         background-color: black;

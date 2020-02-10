@@ -5,4 +5,7 @@ export const StyledContainer = styled.div`
     left: 20px;
     background-color: transparent;
     position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 `

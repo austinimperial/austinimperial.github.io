@@ -1,5 +1,5 @@
 import React, { useContext, useEffect} from 'react'
-import { SvgElementsContext } from 'globalState/SvgElementsProvider'
+import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
 
 function Lines() {
       
