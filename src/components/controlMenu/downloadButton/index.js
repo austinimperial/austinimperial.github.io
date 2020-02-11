@@ -1,70 +1,69 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
-import TextInput from './textInput'
+import React, { useContext, useState, useEffect } from "react";
+import { SvgElementsContext } from "globalState/svgElementsProvider/index";
+import TextInput from "./textInput";
 import {
-    StyledContainer,
-    StyledDownloadButton,
-    StyledWindow,
-    StyledSlider
-} from './styles'
+  StyledContainer,
+  StyledDownloadButton,
+  StyledWindow,
+  StyledSlider
+} from "./styles";
 
 function DownloadButton() {
+  // local state
+  const [name, setName] = useState("");
 
-    // local state
-    const [name,setName] = useState('')
+  // global state
+  const {
+    download,
+    downloadPrompt,
+    toggleDownloadPrompt,
+    setSelectedCircle,
+  } = useContext(SvgElementsContext);
 
-    // global state
-    const { download,setCanAdd,downloadPrompt,setDownloadPrompt,setSelectedCircle } = useContext(SvgElementsContext)
+  useEffect(() => {
+    if (!downloadPrompt) setName("");
+  }, [downloadPrompt]);
 
-    useEffect(() => {
-        if (!downloadPrompt) setName("")
-    },[downloadPrompt,setName])
+  const handleIconClick = e => {
+    e.preventDefault();
 
-    const handleIconClick = e => {
-        e.preventDefault()
-
-        if (downloadPrompt && name.length>0) {
-            download(name)
-            setDownloadPrompt(false)
-            setCanAdd(true)
-            setName('')
-        }
-
-        if (downloadPrompt) {
-            setDownloadPrompt(false)
-            setName('')
-            return 
-        }
-
-        setCanAdd(false)
-        setDownloadPrompt(true)
-        setSelectedCircle(null)
+    if (downloadPrompt && name.length > 0) {
+      download(name);
+      toggleDownloadPrompt();
+      setName("");
+      return;
     }
 
-    return (
-        <StyledContainer>      
-            <div>
-                <StyledDownloadButton 
-                    onClick={handleIconClick}
-                    valid={name.length>0}
-                /> 
-            </div>
-            <StyledWindow>
-                <StyledSlider
-                    active={downloadPrompt} 
-                    onSubmit={handleIconClick}
-                >
-                    <TextInput 
-                        label="save as"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        labelStyle={{'fontFamily':'Titillium Web','fontWeight':'400'}}
-                    />     
-                </StyledSlider>               
-            </StyledWindow>         
-        </StyledContainer>
+    if (downloadPrompt) {
+      toggleDownloadPrompt();
+      setName("");
+      return;
+    }
 
-    )
+    toggleDownloadPrompt();
+    setSelectedCircle(null);
+  };
+
+  return (
+    <StyledContainer>
+      <div>
+        <StyledDownloadButton
+          onClick={handleIconClick}
+          valid={name.length > 0}
+        />
+      </div>
+      <StyledWindow>
+        <StyledSlider active={downloadPrompt} onSubmit={handleIconClick}>
+          <TextInput
+            label="save as"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            labelStyle={{ fontFamily: "Titillium Web", fontWeight: "400" }}
+          />
+        </StyledSlider>
+      </StyledWindow>
+    </StyledContainer>
+  );
 }
 
-export default DownloadButton
+export default DownloadButton;

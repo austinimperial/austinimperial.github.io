@@ -1,33 +1,23 @@
-import React, { useState, useEffect } from 'react'
-import {
-    StyledContainer,
-    StyledToggleButton,
-    StyledText
-} from './styles'
+import React, { useState, useEffect } from "react";
+import { StyledContainer, StyledToggleButton, StyledText } from "./styles";
 
-function ToggleButton({value,label,containerStyle, ...rest}) {
+function ToggleButton({ value, label, containerStyle, ...rest }) {
+  // local state
+  const [isOn, setIsOn] = useState(value || true);
 
-    // local state
-    const [isOn,setIsOn] = useState(value || true)
+  useEffect(() => {
+    if (isOn !== value) setIsOn(prevIsOn => !prevIsOn);
+  },[setIsOn,isOn,value]);
 
-    useEffect(() => {
-        if (isOn !== value) setIsOn(prevIsOn => !prevIsOn)
-    })
-
-    return (
-        <StyledContainer
-            style={containerStyle}
-            {...rest}
-        >
-            <StyledToggleButton
-                onClick={() => setIsOn(prevIsOn => !prevIsOn)}
-                isOn={isOn}
-            >
-
-            </StyledToggleButton>  
-            <StyledText>{label}</StyledText>
-        </StyledContainer>
-    )
+  return (
+    <StyledContainer style={containerStyle} {...rest}>
+      <StyledToggleButton
+        onClick={() => setIsOn(prevIsOn => !prevIsOn)}
+        isOn={isOn}
+      ></StyledToggleButton>
+      <StyledText>{label}</StyledText>
+    </StyledContainer>
+  );
 }
 
-export default ToggleButton
+export default ToggleButton;

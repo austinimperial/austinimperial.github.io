@@ -1,36 +1,34 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react'
-import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
-const _ = require('lodash')
+import React, { useContext, useEffect, useState, useCallback } from "react";
+import { SvgElementsContext } from "globalState/svgElementsProvider/index";
+const _ = require("lodash");
 
 function GuideLines() {
+  // global state
+  const { points, selectedCircle } = useContext(SvgElementsContext);
 
-    // global state
-    const {points,selectedCircle} = useContext(SvgElementsContext)
+  // local state
+  const [cursorCoords, setCursorCoords] = useState({ x: 0, y: 0 });
 
-    // local state
-    const [cursorCoords,setCursorCoords] = useState({x:0,y:0})
-    
-    useEffect(() => {
+  useEffect(() => {
+    const handleMouseMove = _.throttle(e => {
+      setCursorCoords({ x: e.pageX, y: e.pageY });
+    }, 35);
 
-        const handleMouseMove = _.throttle(e => {
-            setCursorCoords({x:e.pageX,y:e.pageY})
-        },35)
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [points]);
 
-        window.addEventListener('mousemove',handleMouseMove)
-        return () => window.removeEventListener('mousemove',handleMouseMove)
-    },[points])
+  const getNextCircleIndex = useCallback(() => {
+    if (selectedCircle === null) return points.length - 1;
+    if (selectedCircle === points.length - 1) return 0;
+    return selectedCircle + 1;
+  }, [points, selectedCircle]);
 
-    const getNextCircleIndex = useCallback(() => {
-        if (selectedCircle === null) return points.length-1
-        if (selectedCircle === points.length-1) return 0
-        return selectedCircle + 1
-    },[points,selectedCircle])
+  if (points.length < 2) return <></>;
 
-    if (points.length < 2) return <></>
-
-    return (
-        <path 
-            d={`
+  return (
+    <path
+      d={`
                 M 
                 ${points[selectedCircle === null ? 0 : selectedCircle].x} 
                 ${points[selectedCircle === null ? 0 : selectedCircle].y} 
@@ -41,10 +39,10 @@ function GuideLines() {
                 ${points[getNextCircleIndex()].x}
                 ${points[getNextCircleIndex()].y}
             `}
-            stroke="#f53dff"
-            strokeDasharray="10,10"
-        />
-    )        
+      stroke="#f53dff"
+      strokeDasharray="10,10"
+    />
+  );
 }
 
-export default GuideLines
+export default GuideLines;

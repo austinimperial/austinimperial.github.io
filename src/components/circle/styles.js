@@ -1,14 +1,17 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 export const StyledCircle = styled.circle`
-
-  ${props => props.selected && `
+  ${props =>
+    props.selected &&
+    `
     fill: #43aba8;
     cursor: pointer
   `}
-  
-  ${props => props.isHovering && `
+
+  ${props =>
+    props.isHovering &&
+    `
      fill: #f53dff;
      cursor: pointer;
   `}
-`
+`;
