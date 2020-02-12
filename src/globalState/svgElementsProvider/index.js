@@ -1,18 +1,15 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { getMidpoints } from "./midpoints";
 import { getCentroids } from "./centroids";
 import { createBlobPath } from "./createBlobPath";
 import { getBounds } from "./getBounds";
 import { adjustBlobPath } from "./adjustBlobPath";
 import { createSvgString } from "./createSvgString";
-import { ScreenSizesContext } from 'globalState/screenSizes/index'
 export const SvgElementsContext = React.createContext();
 const _ = require("lodash");
 const fileDownload = require("js-file-download");
 
 function SvgElementsProvider({ children }) {
-  // global state
-  const { xxs,xs,sm,md,lg,xl,prevScreenSize} = useContext(ScreenSizesContext)
 
   // local state
   const [points, setPoints] = useState([]);
@@ -28,44 +25,6 @@ function SvgElementsProvider({ children }) {
   const [canAdd, setCanAdd] = useState(true);
   const [showLines, setShowLines] = useState(true);
   const [downloadPrompt, setDownloadPrompt] = useState(false);
-  const [logoRef,setLogoRef] = useState(null)
-  const [menuRef,setMenuRef] = useState(null)
-  const [initialScreenSize,setInitialScreenSize] = useState(null)
-
-  useEffect(() => {
-    if (xxs || xs || sm) setInitialScreenSize('small')
-  },[])
-
-  const getScreenChangeDirection = useCallback(() => {
-    const prevIsBig = ['md','lg','xl'].includes(prevScreenSize)
-    const prevIsSmall = ['xxs','xs','sm'].includes(prevScreenSize)
-    const bigToSmall = (xxs || xs || sm) && prevIsBig
-    const smallToBig = (md || lg || xl) && prevIsSmall
-    return {bigToSmall,smallToBig}
-  },[prevScreenSize])
-
-  const shiftUp = useCallback(() => {
-    const newPoints = points.map(point => ({
-      x: initialScreenSize === 'small' ? point.x + 160 : point.x,
-      y: initialScreenSize === 'small' ? point.y + 90 : point.y,
-    })) 
-    return newPoints
-  },[points])
-
-  const shiftBack = useCallback(() => {
-    const {xMin,yMin} = getBounds(points)
-    const newPoints = points.map(point => ({
-      x: (xMin > 160) && initialScreenSize === 'small' ? point.x - 160 : point.x,
-      y: (yMin > 90) && initialScreenSize === 'small' ? point.y - 90 : point.y,
-    })) 
-    return newPoints
-  },[points])
-
-  useEffect(() => {
-    const {smallToBig,bigToSmall} = getScreenChangeDirection()
-    if (smallToBig) setPoints(shiftUp())
-    if (bigToSmall) setPoints(shiftBack())
-  },[prevScreenSize])
 
   useEffect(() => {
     setMidpoints(getMidpoints(points));
@@ -82,12 +41,17 @@ function SvgElementsProvider({ children }) {
   };
 
   useEffect(() => {
-    const handleDelete = e => {
+    const handleKeyDown = e => {
       if (e.code === "Backspace") deleteCircle(selectedCircle);
+      if (e.code === 'Escape') setCanAdd(false)
+      if (e.code === 'KeyA' && !downloadPrompt) toggleCanAdd()
+      if (e.code === 'KeyS' && !downloadPrompt) toggleShowLines()
+      if (e.code === 'KeyD') setDownloadPrompt(true)
+      if (e.code === 'KeyX') deleteCircle(selectedCircle)
     };
 
-    window.addEventListener("keydown", handleDelete);
-    return () => window.removeEventListener("keydown", handleDelete);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedCircle, deleteCircle]);
 
   useEffect(() => {
@@ -123,13 +87,13 @@ function SvgElementsProvider({ children }) {
 
   useEffect(() => {
     const move = _.throttle(e => {
-      if (mouseDown && isOverSvg)
+      if (mouseDown && isOverSvg && !isOverMenu)
         updateCircle(currentCircle, { x: e.offsetX, y: e.offsetY });
     }, 40);
 
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
-  }, [mouseDown, currentCircle, updateCircle, isOverSvg]);
+  }, [mouseDown, currentCircle, updateCircle, isOverSvg, isOverMenu]);
 
   const unHighlightAll = () => {
     setPoints(prevPoints => {
@@ -146,7 +110,7 @@ function SvgElementsProvider({ children }) {
     setDownloadPrompt(false);
   };
 
-  const toggleLines = () => {
+  const toggleShowLines = () => {
     setShowLines(prevShowLines => !prevShowLines);
     setCanAdd(prevCanAdd => (prevCanAdd ? false : prevCanAdd));
   };
@@ -198,7 +162,7 @@ function SvgElementsProvider({ children }) {
     blobPath,
     setBlobPath,
     showLines,
-    toggleLines,
+    toggleShowLines,
     setShowLines,
     toggleCanAdd,
     melt,
@@ -210,10 +174,6 @@ function SvgElementsProvider({ children }) {
     downloadPrompt,
     toggleDownloadPrompt,
     setDownloadPrompt,
-    logoRef,
-    setLogoRef,
-    menuRef,
-    setMenuRef,
     isOverSvg,
     setIsOverSvg
   };

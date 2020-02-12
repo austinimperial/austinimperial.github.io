@@ -8,7 +8,7 @@ import {
   StyledSlider
 } from "./styles";
 
-function DownloadButton() {
+function DownloadButton({small}) {
   // local state
   const [name, setName] = useState("");
 
@@ -21,11 +21,18 @@ function DownloadButton() {
   } = useContext(SvgElementsContext);
 
   useEffect(() => {
-    if (!downloadPrompt) setName("");
-  }, [downloadPrompt]);
+    if (!downloadPrompt) setName("")
+  },[downloadPrompt]);
 
   const handleIconClick = e => {
     e.preventDefault();
+
+    if (small) {
+      download('blob');
+      toggleDownloadPrompt();
+      setName("");
+      return
+    }
 
     if (downloadPrompt && name.length > 0) {
       download(name);
@@ -53,7 +60,7 @@ function DownloadButton() {
         />
       </div>
       <StyledWindow>
-        <StyledSlider active={downloadPrompt} onSubmit={handleIconClick}>
+        <StyledSlider active={downloadPrompt && !small} onSubmit={handleIconClick}>
           <TextInput
             label="save as"
             value={name}

@@ -13,6 +13,7 @@ function App() {
     return (
       <StyledAppContainer>
         <Logo />
+        <ControlMenu />
         <SvgBackground />
       </StyledAppContainer>
     );

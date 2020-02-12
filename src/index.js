@@ -7,12 +7,15 @@ import { ThemeProvider } from "styled-components";
 import { mainTheme } from "styles/mainTheme";
 import ScreenSizesProvider from "globalState/screenSizes/index";
 import SvgElementsProvider from "globalState/svgElementsProvider/index";
+import ResponsivePointShiftProvider from 'globalState/responsivePointShiftProvider/index'
 
 ReactDOM.render(
   <ThemeProvider theme={mainTheme}>
     <ScreenSizesProvider>
       <SvgElementsProvider>
-        <App />
+        <ResponsivePointShiftProvider>
+          <App />
+        </ResponsivePointShiftProvider>
       </SvgElementsProvider>
     </ScreenSizesProvider>
   </ThemeProvider>,
