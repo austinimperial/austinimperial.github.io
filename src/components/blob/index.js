@@ -14,7 +14,7 @@ function Blob() {
 
   useEffect(() => {
     setBlobPath(createBlobPath(points, midpoints));
-  }, [midpoints,setBlobPath,createBlobPath]);
+  }, [midpoints, setBlobPath, createBlobPath]);
 
   return (
     <path

@@ -5,9 +5,9 @@ import Lines from "components/lines/index";
 import GuideLines from "components/guideLines/index";
 import Blob from "components/blob/index";
 import { StyledContainerSVG } from "./styles";
-import { ScreenSizesContext } from 'globalState/screenSizes/index'
-import BackgroundRect from 'components/backgroundRect/index'
-import Logo from 'components/logo/index';
+import { ScreenSizesContext } from "globalState/screenSizes/index";
+import BackgroundRect from "components/backgroundRect/index";
+import Logo from "components/logo/index";
 
 function SvgBackground() {
   // global state
@@ -16,10 +16,11 @@ function SvgBackground() {
     points,
     showLines,
     canAdd,
-    setDownloadPrompt
+    setDownloadPrompt,
+    setIsOverSvg
   } = useContext(SvgElementsContext);
 
-  const {md,lg,xl} = useContext(ScreenSizesContext)
+  const { md, lg, xl } = useContext(ScreenSizesContext);
 
   return (
     <div
@@ -27,6 +28,8 @@ function SvgBackground() {
       onMouseDown={() => setMouseDown(true)}
       onMouseUp={() => setMouseDown(false)}
       onClick={() => setDownloadPrompt(false)}
+      onMouseEnter={() => setIsOverSvg(true)}
+      onMouseLeave={() => setIsOverSvg(false)}
     >
       <StyledContainerSVG>
         <BackgroundRect />

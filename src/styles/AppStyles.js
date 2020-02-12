@@ -1,5 +1,5 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 export const StyledAppContainer = styled.div`
-    background-color: ${props => props.theme.bgMain};
-`
+  background-color: ${props => props.theme.bgMain};
+`;

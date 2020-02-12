@@ -1,3 +1,3 @@
 export const mainTheme = {
-    bgMain:'pink'
-}
+  bgMain: "pink"
+};

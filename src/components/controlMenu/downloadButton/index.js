@@ -17,7 +17,7 @@ function DownloadButton() {
     download,
     downloadPrompt,
     toggleDownloadPrompt,
-    setSelectedCircle,
+    setSelectedCircle
   } = useContext(SvgElementsContext);
 
   useEffect(() => {

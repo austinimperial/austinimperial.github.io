@@ -7,7 +7,7 @@ function ToggleButton({ value, label, containerStyle, ...rest }) {
 
   useEffect(() => {
     if (isOn !== value) setIsOn(prevIsOn => !prevIsOn);
-  },[setIsOn,isOn,value]);
+  }, [setIsOn, isOn, value]);
 
   return (
     <StyledContainer style={containerStyle} {...rest}>

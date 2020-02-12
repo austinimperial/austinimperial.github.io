@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import { StyledContainer } from "./styles";
 import { StyledMenuButton } from "components/controlMenu/shared/sharedStyles";
 import DownloadButton from "components/controlMenu/downloadButton/index";
@@ -15,11 +15,20 @@ function ControlMenu() {
     toggleLines,
     toggleCanAdd,
     melt,
-    handleClearClick
+    handleClearClick,
+    setMenuRef
   } = useContext(SvgElementsContext);
+
+  // ref
+  const menuRef = useRef()
+
+  useEffect(() => {
+    setMenuRef(menuRef)
+  },[])
 
   return (
     <StyledContainer
+      ref={menuRef}
       onMouseEnter={() => setIsOverMenu(true)}
       onMouseLeave={() => setIsOverMenu(false)}
     >

@@ -6,4 +6,3 @@ export const StyledContainerSVG = styled.svg`
   fill: none;
   background-color: transparent;
 `;
-

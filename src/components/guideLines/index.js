@@ -4,19 +4,19 @@ const _ = require("lodash");
 
 function GuideLines() {
   // global state
-  const { points, selectedCircle } = useContext(SvgElementsContext);
+  const { points, selectedCircle, isOverMenu, isOverSvg } = useContext(SvgElementsContext);
 
   // local state
-  const [cursorCoords, setCursorCoords] = useState({ x: 0, y: 0 });
+  const [cursorCoords, setCursorCoords] = useState(null);
 
   useEffect(() => {
     const handleMouseMove = _.throttle(e => {
-      setCursorCoords({ x: e.pageX, y: e.pageY });
+      setCursorCoords({ x: e.layerX, y: e.layerY });
     }, 35);
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [points]);
+  }, []);
 
   const getNextCircleIndex = useCallback(() => {
     if (selectedCircle === null) return points.length - 1;
@@ -24,7 +24,7 @@ function GuideLines() {
     return selectedCircle + 1;
   }, [points, selectedCircle]);
 
-  if (points.length < 2) return <></>;
+  if (points.length < 2 || isOverMenu || !isOverSvg || cursorCoords === null ) return <></>;
 
   return (
     <path
