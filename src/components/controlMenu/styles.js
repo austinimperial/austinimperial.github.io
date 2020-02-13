@@ -37,3 +37,17 @@ export const StyledControlContainer = styled.div`
     align-items: flex-end;
   `}
 `
+
+export const StyledMeltAndMoveContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+`
+
+export const StyledDownloadButtonContainer = styled.div`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+`

@@ -6,9 +6,8 @@ export const StyledContainer = styled.div`
 `;
 
 export const StyledSvgContainer = styled.div`
-  height: 14vh;
-  min-width: 280px;
-  min-height: 60px;
+  width: 100vh;
+  max-width: 400px;
   margin: 0px 0px 0px 10px;
 `;
 

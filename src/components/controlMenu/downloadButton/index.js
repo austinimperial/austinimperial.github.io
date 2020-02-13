@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { SvgElementsContext } from "globalState/svgElementsProvider/index";
-import TextInput from "./textInput";
+import { ScreenSizesContext } from 'globalState/screenSizes/index'
+import TextInput from 'components/controlMenu/downloadButton/textInput/index'
 import {
   StyledContainer,
   StyledDownloadButton,
@@ -8,7 +9,7 @@ import {
   StyledSlider
 } from "./styles";
 
-function DownloadButton({small}) {
+function DownloadButton() {
   // local state
   const [name, setName] = useState("");
 
@@ -19,6 +20,7 @@ function DownloadButton({small}) {
     toggleDownloadPrompt,
     setSelectedCircle
   } = useContext(SvgElementsContext);
+  const { xxs,xs,sm,md,lg,xl } = useContext(ScreenSizesContext)
 
   useEffect(() => {
     if (!downloadPrompt) setName("")
@@ -27,7 +29,7 @@ function DownloadButton({small}) {
   const handleIconClick = e => {
     e.preventDefault();
 
-    if (small) {
+    if (xxs || xs || sm) {
       download('blob');
       toggleDownloadPrompt();
       setName("");
@@ -51,26 +53,42 @@ function DownloadButton({small}) {
     setSelectedCircle(null);
   };
 
-  return (
-    <StyledContainer>
-      <div>
+  if (xxs || xs || sm) {
+    return (
+      <StyledContainer>
         <StyledDownloadButton
+          small
           onClick={handleIconClick}
-          valid={name.length > 0}
         />
-      </div>
-      <StyledWindow>
-        <StyledSlider active={downloadPrompt && !small} onSubmit={handleIconClick}>
-          <TextInput
-            label="save as"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            labelStyle={{ fontFamily: "Titillium Web", fontWeight: "400" }}
+      </StyledContainer>      
+    )
+  }
+
+  if (md || lg || xl) {
+    return (
+      <StyledContainer>
+        <div>
+          <StyledDownloadButton
+            big
+            onClick={handleIconClick}
+            valid={name.length > 0}
           />
-        </StyledSlider>
-      </StyledWindow>
-    </StyledContainer>
-  );
+        </div>
+        <StyledWindow>
+          <StyledSlider active={downloadPrompt} onSubmit={handleIconClick}>
+            <TextInput
+              label="save as"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              labelStyle={{ fontFamily: "Titillium Web", fontWeight: "400" }}
+            />
+          </StyledSlider>
+        </StyledWindow>
+      </StyledContainer>
+    );    
+  }
+
+
 }
 
 export default DownloadButton;

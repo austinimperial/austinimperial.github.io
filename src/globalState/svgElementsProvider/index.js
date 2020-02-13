@@ -25,6 +25,7 @@ function SvgElementsProvider({ children }) {
   const [canAdd, setCanAdd] = useState(true);
   const [showLines, setShowLines] = useState(true);
   const [downloadPrompt, setDownloadPrompt] = useState(false);
+  const [inMoveMode,setInMoveMode] = useState(false)
 
   useEffect(() => {
     setMidpoints(getMidpoints(points));
@@ -46,8 +47,9 @@ function SvgElementsProvider({ children }) {
       if (e.code === 'Escape') setCanAdd(false)
       if (e.code === 'KeyA' && !downloadPrompt) toggleCanAdd()
       if (e.code === 'KeyS' && !downloadPrompt) toggleShowLines()
-      if (e.code === 'KeyD') setDownloadPrompt(true)
-      if (e.code === 'KeyX') deleteCircle(selectedCircle)
+      if (e.code === 'KeyD' && !downloadPrompt) setDownloadPrompt(true)
+      if (e.code === 'KeyX' && !downloadPrompt) deleteCircle(selectedCircle)
+      if (e.code === 'KeyM' && !downloadPrompt) melt()
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -108,26 +110,31 @@ function SvgElementsProvider({ children }) {
     setCanAdd(true);
     setShowLines(true);
     setDownloadPrompt(false);
+    setInMoveMode(false)
   };
 
   const toggleShowLines = () => {
     setShowLines(prevShowLines => !prevShowLines);
     setCanAdd(prevCanAdd => (prevCanAdd ? false : prevCanAdd));
+    setInMoveMode(false)
   };
 
   const toggleCanAdd = () => {
     setCanAdd(prevCanAdd => !prevCanAdd);
     setShowLines(prevShowLines => (!prevShowLines ? true : prevShowLines));
+    setInMoveMode(false)
   };
 
   const toggleDownloadPrompt = () => {
     setDownloadPrompt(prevDownloadPrompt => !prevDownloadPrompt);
     setCanAdd(prevCanAdd => (prevCanAdd ? false : prevCanAdd));
+    setInMoveMode(false)
   };
 
   const melt = () => {
     const newPoints = getCentroids(points);
     setPoints(newPoints);
+    setInMoveMode(false)
   };
 
   const download = filename => {
@@ -175,7 +182,9 @@ function SvgElementsProvider({ children }) {
     toggleDownloadPrompt,
     setDownloadPrompt,
     isOverSvg,
-    setIsOverSvg
+    setIsOverSvg,
+    inMoveMode,
+    setInMoveMode
   };
 
   return (

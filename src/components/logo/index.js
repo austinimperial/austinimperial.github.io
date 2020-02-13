@@ -6,7 +6,7 @@ import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
 function Logo() {
   // global state
   const { xxs, xs, sm, md, lg, xl } = useContext(ScreenSizesContext);
-  const { setLogoRef, setIsOverSvg } = useContext(SvgElementsContext)
+  const { setIsOverSvg } = useContext(SvgElementsContext)
 
   if (xxs || xs || sm) {
     return (
@@ -14,7 +14,7 @@ function Logo() {
         onMouseMove={() => setIsOverSvg(false)}
       >
         <StyledSvgContainer>
-          <svg viewBox="0 0 430 100" height="100%">
+          <svg viewBox="0 0 430 100" width="100%">
             <StyledText y="60">quick-blob-svg</StyledText>
             <StyledText subtext x="50" y="85">
               "I need a blob - quick!"

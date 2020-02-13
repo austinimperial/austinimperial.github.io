@@ -4,6 +4,7 @@ const validDownloadicon = require("./validDownloadIcon.svg");
 
 export const StyledContainer = styled.div`
   display: flex;
+  margin: 0px 0px 0px 4px;
 `;
 
 export const StyledDownloadButton = styled.button`
@@ -16,18 +17,26 @@ export const StyledDownloadButton = styled.button`
   transition: all 0.1s ease-in;
   min-width: 0;
   background-color: transparent;
-  border: none;
+
+  ${props => props.big && `
+    border: none;
+
+    :hover {
+      background-size: 35px;
+      background-position: right 6px bottom 6px;
+    }
+    
+  `}
+
+  ${props => props.small && `
+    border: 1px solid black;
+  `}
 
   background-image: url(${props =>
     props.valid ? validDownloadicon : downloadIcon});
   background-size: 30px;
   background-repeat: no-repeat;
   background-position: right 9px bottom 9px;
-
-  :hover {
-    background-size: 35px;
-    background-position: right 6px bottom 6px;
-  }
 `;
 
 export const StyledWindow = styled.div`

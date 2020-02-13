@@ -1,10 +1,13 @@
 import React, { useContext } from "react";
 import { 
   StyledContainer,
-  StyledControlContainer
+  StyledControlContainer,
+  StyledMeltAndMoveContainer,
+  StyledDownloadButtonContainer
 } from "./styles";
 import { StyledMenuButton } from "components/controlMenu/shared/sharedStyles";
 import DownloadButton from "components/controlMenu/downloadButton/index";
+import MoveButton from 'components/controlMenu/moveButton/index'
 import ToggleButton from "components/controlMenu/toggleButton/index";
 import { SvgElementsContext } from "globalState/svgElementsProvider/index";
 import { ScreenSizesContext } from 'globalState/screenSizes/index'
@@ -27,12 +30,15 @@ function ControlMenu() {
     return (
       <StyledContainer small>
         <StyledControlContainer left >
-          <StyledMenuButton
-            style={{ margin: "5px 10px 0px 0px" }}
-            onClick={() => melt()}
-          >
-            melt
-          </StyledMenuButton>
+          <StyledMeltAndMoveContainer>
+            <StyledMenuButton
+              style={{ margin: "0px 10px 0px 0px" }}
+              onClick={() => melt()}
+            >
+              melt
+            </StyledMenuButton>
+            <MoveButton />
+          </StyledMeltAndMoveContainer>
           <ToggleButton
             label="add points"
             containerStyle={{ margin: "5px 10px 0px 0px" }}
@@ -50,8 +56,10 @@ function ControlMenu() {
           <ClearButton
             onClick={handleClearClick}
             containerStyle={{ margin: "5px 0px 0px 0px", minHeight: "32px" }}
-          />            
-          <DownloadButton small />
+          />      
+          <StyledDownloadButtonContainer>
+            <DownloadButton />
+          </StyledDownloadButtonContainer>    
         </StyledControlContainer>
       </StyledContainer>
     )
@@ -87,6 +95,7 @@ function ControlMenu() {
           onClick={handleClearClick}
           containerStyle={{ margin: "60px 0px 0px 0px", minHeight: "32px" }}
         />
+        <MoveButton />
         <DownloadButton />
       </StyledContainer>
     );    
