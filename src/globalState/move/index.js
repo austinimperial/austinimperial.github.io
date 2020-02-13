@@ -37,26 +37,39 @@ function MoveProvider({children}) {
         return () => window.removeEventListener('mousedown',handleMouseDown)
     },[handleMouseDown])
 
+    const moveBlob = useCallback(_.throttle(e => {
+        if (inMoveMode && mouseDown && mouseIsOverBlob) {
+            console.log('yo')
+            const newPoints = diffs.map((diff,i) => {
+                return {
+                    x: e.offsetX + diffs[i].x,
+                    y: e.offsetY + diffs[i].y
+                }
+            })
+            setPoints(newPoints)
+        }
+    },10),[mouseIsOverBlob,mouseDown,inMoveMode,setPoints,diffs])
 
     useEffect(() => {
 
-        const moveBlob = e => {
-            if (inMoveMode && mouseDown && mouseIsOverBlob) {
-                const newPoints = points.map((point,i) => {
-                    return {
-                        x: e.offsetX + diffs[i].x,
-                        y: e.offsetY + diffs[i].y
-                    }
-                })
-                setPoints(newPoints)
-            }
-        }
+        // const moveBlob = _.throttle(e => {
+        //     if (inMoveMode && mouseDown && mouseIsOverBlob) {
+        //         console.log('yo')
+        //         const newPoints = points.map((point,i) => {
+        //             return {
+        //                 x: e.offsetX + diffs[i].x,
+        //                 y: e.offsetY + diffs[i].y
+        //             }
+        //         })
+        //         setPoints(newPoints)
+        //     }
+        // },400)
 
         window.addEventListener("mousemove", moveBlob);
         return () => {
             window.removeEventListener("mousemove", moveBlob);
         }
-    },[mouseIsOverBlob,mouseDown,inMoveMode,points,setPoints,points,diffs])
+    },[moveBlob])
 
 
     const value = {
