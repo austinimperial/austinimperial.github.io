@@ -11,9 +11,11 @@ export const StyledBackgroundRect = styled.rect`
 
 function BackgroundRect() {
   // global state
-  const { setIsOver, canAdd, setSelectedCircle } = useContext(
-    SvgElementsContext
-  );
+  const { 
+    setIsOver, 
+    canAdd, 
+    setSelectedCircle
+  } = useContext(SvgElementsContext);
 
   return (
     <StyledBackgroundRect

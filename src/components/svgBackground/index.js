@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import Circle from "components/circle/index";
 import { SvgElementsContext } from "globalState/svgElementsProvider/index";
 import Lines from "components/lines/index";
@@ -17,13 +17,22 @@ function SvgBackground() {
     showLines,
     canAdd,
     setDownloadPrompt,
-    setIsOverSvg
+    setIsOverSvg,
+    setSvgBackgroundRef
   } = useContext(SvgElementsContext);
 
-  const { md, lg, xl } = useContext(ScreenSizesContext);
+  const { md, lg, xl, prevScreenSize } = useContext(ScreenSizesContext);
+
+  // ref
+  const backgroundRef = useRef()
+
+  useEffect(() => {
+    setSvgBackgroundRef(backgroundRef)
+  },[prevScreenSize,setSvgBackgroundRef])
 
   return (
     <div
+      ref={backgroundRef}
       style={{ position: "absolute" }}
       onMouseDown={() => setMouseDown(true)}
       onMouseUp={() => setMouseDown(false)}

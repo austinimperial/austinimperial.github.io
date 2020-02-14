@@ -13,7 +13,8 @@ function MoveProvider({children}) {
         mouseDown,
         inMoveMode,
         setInMoveMode,
-        setSelectedCircle
+        setSelectedCircle,
+        svgBackgroundRef
     } = useContext(SvgElementsContext)
 
     // local state
@@ -29,7 +30,7 @@ function MoveProvider({children}) {
 
     const handleMouseDown = useCallback(e => {
         const diffs = points.map(point => {
-            return {x: point.x - e.offsetX, y: point.y - e.offsetY}
+            return {x: point.x - e.pageX, y: point.y - e.pageY}
         })
         setDiffs(diffs)
     },[points])
@@ -43,8 +44,8 @@ function MoveProvider({children}) {
         if (inMoveMode && mouseDown && mouseIsOverBlob) {
             const newPoints = diffs.map((diff,i) => {
                 return {
-                    x: e.offsetX + diffs[i].x,
-                    y: e.offsetY + diffs[i].y
+                    x: e.pageX + diffs[i].x,
+                    y: e.pageY + diffs[i].y
                 }
             })
             setPoints(newPoints)

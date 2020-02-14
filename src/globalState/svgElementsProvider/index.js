@@ -26,6 +26,7 @@ function SvgElementsProvider({ children }) {
   const [showLines, setShowLines] = useState(true);
   const [downloadPrompt, setDownloadPrompt] = useState(false);
   const [inMoveMode,setInMoveMode] = useState(false)
+  const [svgBackgroundRef,setSvgBackgroundRef] = useState(null)
 
   useEffect(() => {
     setMidpoints(getMidpoints(points));
@@ -58,7 +59,7 @@ function SvgElementsProvider({ children }) {
 
   useEffect(() => {
     const addCircle = _.throttle(e => {
-      const pointToAdd = { x: e.offsetX, y: e.offsetY }
+      const pointToAdd = { x: e.pageX, y: e.pageY - svgBackgroundRef.current.offsetTop }
       if (!isOver && !isOverMenu && canAdd && isOverSvg) {
         setPoints(prevPoints => {
           if (selectedCircle === null)
@@ -88,13 +89,13 @@ function SvgElementsProvider({ children }) {
   };
 
   useEffect(() => {
-    const move = _.throttle(e => {
+    const movePoint = _.throttle(e => {
       if (mouseDown && isOverSvg && !isOverMenu)
-        updateCircle(currentCircle, { x: e.offsetX, y: e.offsetY });
+        updateCircle(currentCircle, { x: e.pageX, y: e.pageY - svgBackgroundRef.current.offsetTop });
     }, 40);
 
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
+    window.addEventListener("mousemove", movePoint);
+    return () => window.removeEventListener("mousemove", movePoint);
   }, [mouseDown, currentCircle, updateCircle, isOverSvg, isOverMenu]);
 
   const unHighlightAll = () => {
@@ -184,7 +185,9 @@ function SvgElementsProvider({ children }) {
     isOverSvg,
     setIsOverSvg,
     inMoveMode,
-    setInMoveMode
+    setInMoveMode,
+    svgBackgroundRef,
+    setSvgBackgroundRef
   };
 
   return (
