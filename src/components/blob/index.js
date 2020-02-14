@@ -10,9 +10,10 @@ function Blob() {
     blobPath,
     setBlobPath,
     setIsOver,
-    createBlobPath
+    createBlobPath,
+    inMoveMode
   } = useContext(SvgElementsContext);
-  const { inMoveMode, setMouseIsOverBlob } = useContext(MoveContext)
+  const { setMouseIsOverBlob } = useContext(MoveContext)
 
   const handleMouseEnter = () => {
     setIsOver(false)
@@ -25,8 +26,8 @@ function Blob() {
 
   return (
     <path
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setMouseIsOverBlob(false)}
+      onMouseDown={handleMouseEnter}
+      onMouseUp={() => setMouseIsOverBlob(false)}
       stroke={inMoveMode ? 'white' : 'black'}
       strokeWidth={inMoveMode ? '8' : '0'}
       fill="black"

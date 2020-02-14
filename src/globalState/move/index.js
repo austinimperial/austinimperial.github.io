@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react'
 import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
+import { throttle } from 'lodash'
 export const MoveContext = React.createContext()
-const _ = require('lodash')
 
 function MoveProvider({children}) {
     // global state
@@ -12,7 +12,8 @@ function MoveProvider({children}) {
         setShowLines,
         mouseDown,
         inMoveMode,
-        setInMoveMode
+        setInMoveMode,
+        setSelectedCircle
     } = useContext(SvgElementsContext)
 
     // local state
@@ -23,6 +24,7 @@ function MoveProvider({children}) {
         setInMoveMode(prevInMoveMode => !prevInMoveMode)
         setCanAdd(prevCanAdd => prevCanAdd ? false : prevCanAdd);
         setShowLines(prevShowLines => prevShowLines ? false : prevShowLines);
+        setSelectedCircle(null)
     }
 
     const handleMouseDown = useCallback(e => {
@@ -37,9 +39,8 @@ function MoveProvider({children}) {
         return () => window.removeEventListener('mousedown',handleMouseDown)
     },[handleMouseDown])
 
-    const moveBlob = useCallback(_.throttle(e => {
+    const moveBlob = useCallback(throttle(e => {
         if (inMoveMode && mouseDown && mouseIsOverBlob) {
-            console.log('yo')
             const newPoints = diffs.map((diff,i) => {
                 return {
                     x: e.offsetX + diffs[i].x,
@@ -48,23 +49,9 @@ function MoveProvider({children}) {
             })
             setPoints(newPoints)
         }
-    },10),[mouseIsOverBlob,mouseDown,inMoveMode,setPoints,diffs])
+    },20),[mouseIsOverBlob,mouseDown,inMoveMode,setPoints,diffs])
 
     useEffect(() => {
-
-        // const moveBlob = _.throttle(e => {
-        //     if (inMoveMode && mouseDown && mouseIsOverBlob) {
-        //         console.log('yo')
-        //         const newPoints = points.map((point,i) => {
-        //             return {
-        //                 x: e.offsetX + diffs[i].x,
-        //                 y: e.offsetY + diffs[i].y
-        //             }
-        //         })
-        //         setPoints(newPoints)
-        //     }
-        // },400)
-
         window.addEventListener("mousemove", moveBlob);
         return () => {
             window.removeEventListener("mousemove", moveBlob);

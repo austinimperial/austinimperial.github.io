@@ -6,7 +6,7 @@ export const ResponsivePointShiftContext = React.createContext()
 function ResponsivePointShiftProvider({children}) {
     // global state
     const {xxs,xs,sm,md,lg,xl,prevScreenSize} = useContext(ScreenSizesContext)
-    const {points,setPoints,getBounds} = useContext(SvgElementsContext)
+    const {points,setPoints,getBounds,toggleDownloadPrompt} = useContext(SvgElementsContext)
 
     // local state
     const [initialScreenSize,setInitialScreenSize] = useState(null)
@@ -47,7 +47,10 @@ function ResponsivePointShiftProvider({children}) {
   
     useEffect(() => {
       const {smallToBig,bigToSmall} = getScreenChangeDirection()
-      if (smallToBig) setPoints(shiftAwayFromOrigin())
+      if (smallToBig) {
+        setPoints(shiftAwayFromOrigin())
+        toggleDownloadPrompt()
+      }
       if (bigToSmall) setPoints(shiftTowardOrigin())
     },[prevScreenSize])
 
