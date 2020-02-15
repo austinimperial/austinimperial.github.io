@@ -95,7 +95,11 @@ function SvgElementsProvider({ children }) {
     }, 40);
 
     window.addEventListener("mousemove", movePoint);
-    return () => window.removeEventListener("mousemove", movePoint);
+    window.addEventListener("touchmove", movePoint)
+    return () => {
+      window.removeEventListener("mousemove", movePoint)
+      window.removeEventListener("touchmove", movePoint)
+    };
   }, [mouseDown, currentCircle, updateCircle, isOverSvg, isOverMenu]);
 
   const unHighlightAll = () => {
