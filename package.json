@@ -1,42 +1,30 @@
 {
   "name": "quick-blob-svg",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "js-file-download": "^0.4.9",
-    "lodash": "^4.17.15",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-scripts": "3.3.1",
-    "serve": "^11.3.0",
-    "styled-components": "^5.0.0"
-  },
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "format": "prettier \"src/**/*.{js,html}\" --write"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "concurrently \"nodemon server.js\" ",
+    "dev": "concurrently \"nodemon server.js\" \"cd client && npm run start\"",
+    "heroku-postbuild": "npm install --prefix client && npm run build --prefix client"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/austinimperial/quick-blob-svg.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/austinimperial/quick-blob-svg/issues"
   },
-  "devDependencies": {
-    "prettier": "^1.19.1"
+  "homepage": "https://github.com/austinimperial/quick-blob-svg#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.1.0",
+    "express": "^4.17.1",
+    "http-proxy-middleware": "^0.20.0",
+    "nodemon": "^2.0.2",
+    "serve": "^11.3.0"
   }
 }
