@@ -1,17 +1,30 @@
 import React, { useContext, useEffect, useState, useCallback } from "react";
-import { SvgElementsContext } from "globalState/svgElementsProvider/index";
+import { ControlStateContext } from "globalState/controlState/index";
+import { PointsContext } from "globalState/points/index";
 const _ = require("lodash");
 
 function GuideLines() {
   // global state
-  const { points, selectedCircle, isOverMenu, isOverSvg, svgBackgroundRef } = useContext(SvgElementsContext);
+  const {
+    selectedCircle,
+    isOverMenu,
+    isOverSvg,
+    svgBackgroundRef
+  } = useContext(ControlStateContext);
+  const { points } = useContext(PointsContext);
 
   // local state
   const [cursorCoords, setCursorCoords] = useState(null);
 
-  const handleMouseMove = useCallback(_.throttle(e => {
-    setCursorCoords({ x: e.pageX, y: e.pageY - svgBackgroundRef.current.offsetTop });
-  }, 35),[svgBackgroundRef])
+  const handleMouseMove = useCallback(
+    _.throttle(e => {
+      setCursorCoords({
+        x: e.pageX,
+        y: e.pageY - svgBackgroundRef.current.offsetTop
+      });
+    }, 35),
+    [svgBackgroundRef]
+  );
 
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);
@@ -24,7 +37,8 @@ function GuideLines() {
     return selectedCircle + 1;
   }, [points, selectedCircle]);
 
-  if (points.length < 2 || isOverMenu || !isOverSvg || cursorCoords === null ) return <></>;
+  if (points.length < 2 || isOverMenu || !isOverSvg || cursorCoords === null)
+    return <></>;
 
   return (
     <path

@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
-import { SvgElementsContext } from "globalState/svgElementsProvider/index";
-import { ScreenSizesContext } from 'globalState/screenSizes/index'
-import TextInput from 'components/controlMenu/downloadButton/textInput/index'
+import { ControlStateContext } from "globalState/controlState/index";
+import { ScreenSizesContext } from "globalState/screenSizes/index";
+import { PointsContext } from "globalState/points/index";
+import TextInput from "components/controlMenu/downloadButton/textInput/index";
 import {
   StyledContainer,
   StyledDownloadButton,
@@ -15,25 +16,25 @@ function DownloadButton() {
 
   // global state
   const {
-    download,
     downloadPrompt,
     toggleDownloadPrompt,
     setSelectedCircle
-  } = useContext(SvgElementsContext);
-  const { xxs,xs,sm,md,lg,xl } = useContext(ScreenSizesContext)
+  } = useContext(ControlStateContext);
+  const { xxs, xs, sm, md, lg, xl } = useContext(ScreenSizesContext);
+  const { download } = useContext(PointsContext);
 
   useEffect(() => {
-    if (!downloadPrompt) setName("")
-  },[downloadPrompt]);
+    if (!downloadPrompt) setName("");
+  }, [downloadPrompt]);
 
   const handleIconClick = e => {
     e.preventDefault();
 
     if (xxs || xs || sm) {
-      download('blob');
+      download("blob");
       toggleDownloadPrompt();
       setName("");
-      return
+      return;
     }
 
     if (downloadPrompt && name.length > 0) {
@@ -56,12 +57,9 @@ function DownloadButton() {
   if (xxs || xs || sm) {
     return (
       <StyledContainer>
-        <StyledDownloadButton
-          small
-          onClick={handleIconClick}
-        />
-      </StyledContainer>      
-    )
+        <StyledDownloadButton small onClick={handleIconClick} />
+      </StyledContainer>
+    );
   }
 
   if (md || lg || xl) {
@@ -85,10 +83,8 @@ function DownloadButton() {
           </StyledSlider>
         </StyledWindow>
       </StyledContainer>
-    );    
+    );
   }
-
-
 }
 
 export default DownloadButton;

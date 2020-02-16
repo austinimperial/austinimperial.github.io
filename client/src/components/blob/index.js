@@ -1,24 +1,18 @@
 import React, { useContext, useEffect } from "react";
-import { SvgElementsContext } from "globalState/svgElementsProvider/index";
-import { MoveContext } from 'globalState/move/index'
+import { ControlStateContext } from "globalState/controlState/index";
+import { PointsContext } from "globalState/points/index";
+import { MoveContext } from "globalState/move/index";
 
 function Blob() {
   // global state
-  const {
-    points,
-    midpoints,
-    blobPath,
-    setBlobPath,
-    setIsOver,
-    createBlobPath,
-    inMoveMode
-  } = useContext(SvgElementsContext);
-  const { setMouseIsOverBlob } = useContext(MoveContext)
+  const { blobPath, setBlobPath, setIsOverCircle, inMoveMode } = useContext(ControlStateContext);
+  const { setMouseIsOverBlob } = useContext(MoveContext);
+  const { createBlobPath, midpoints, points } = useContext(PointsContext);
 
   const handleMouseEnter = () => {
-    setIsOver(false)
-    setMouseIsOverBlob(true)
-  }
+    setIsOverCircle(false);
+    setMouseIsOverBlob(true);
+  };
 
   useEffect(() => {
     setBlobPath(createBlobPath(points, midpoints));
@@ -28,8 +22,8 @@ function Blob() {
     <path
       onMouseDown={handleMouseEnter}
       onMouseUp={() => setMouseIsOverBlob(false)}
-      stroke={inMoveMode ? 'white' : 'black'}
-      strokeWidth={inMoveMode ? '8' : '0'}
+      stroke={inMoveMode ? "white" : "black"}
+      strokeWidth={inMoveMode ? "8" : "0"}
       fill="black"
       d={blobPath}
     />

@@ -1,11 +1,13 @@
 import React, { useState, useContext } from "react";
 import { StyledMenuButton } from "components/controlMenu/shared/sharedStyles";
-import { SvgElementsContext } from "globalState/svgElementsProvider/index";
+import { ControlStateContext } from "globalState/controlState/index";
 import { StyledContainer, StyledConfirmButton, StyledText } from "./styles";
 
 function ClearButton({ containerStyle, onClick }) {
   // global state
-  const { setSelectedCircle } = useContext(SvgElementsContext);
+  const { setSelectedCircle, setIsOverSvg, setIsOverMenu } = useContext(
+    ControlStateContext
+  );
 
   // local state
   const [confirm, setConfirm] = useState(false);
@@ -14,6 +16,12 @@ function ClearButton({ containerStyle, onClick }) {
     onClick();
     setConfirm(false);
     setSelectedCircle(null);
+  };
+
+  const handleUnconfirmClick = () => {
+    setConfirm(false);
+    setIsOverSvg(true);
+    setIsOverMenu(false);
   };
 
   if (!confirm) {
@@ -37,7 +45,7 @@ function ClearButton({ containerStyle, onClick }) {
           Y
         </StyledConfirmButton>
 
-        <StyledConfirmButton onClick={() => setConfirm(false)}>
+        <StyledConfirmButton onClick={handleUnconfirmClick}>
           N
         </StyledConfirmButton>
       </StyledContainer>

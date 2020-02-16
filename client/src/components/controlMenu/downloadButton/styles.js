@@ -18,7 +18,9 @@ export const StyledDownloadButton = styled.button`
   min-width: 0;
   background-color: transparent;
 
-  ${props => props.big && `
+  ${props =>
+    props.big &&
+    `
     border: none;
 
     :hover {
@@ -28,7 +30,9 @@ export const StyledDownloadButton = styled.button`
     
   `}
 
-  ${props => props.small && `
+  ${props =>
+    props.small &&
+    `
     border: 1px solid black;
   `}
 

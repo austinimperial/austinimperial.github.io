@@ -1,7 +1,9 @@
 import styled from "styled-components";
 
 export const StyledContainer = styled.div`
-  ${props => props.small && `
+  ${props =>
+    props.small &&
+    `
     background-color: transparent;
     display: flex;
     border-top: 1px solid black;
@@ -10,7 +12,9 @@ export const StyledContainer = styled.div`
     flex-wrap: wrap;
   `}
 
-  ${props => props.big && `
+  ${props =>
+    props.big &&
+    `
     top: 130px;
     left: 20px;
     background-color: transparent;
@@ -19,7 +23,6 @@ export const StyledContainer = styled.div`
     flex-direction: column;
     align-items: flex-start;  
   `}
-
 `;
 
 export const StyledControlContainer = styled.div`
@@ -29,25 +32,29 @@ export const StyledControlContainer = styled.div`
   flex-wrap: wrap;
   flex-grow: 1;
 
-  ${props => props.left && `
+  ${props =>
+    props.left &&
+    `
     align-items: flex-start;
   `}
 
-  ${props => props.right && `
+  ${props =>
+    props.right &&
+    `
     align-items: flex-end;
   `}
-`
+`;
 
 export const StyledMeltAndMoveContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
-`
+`;
 
 export const StyledDownloadButtonContainer = styled.div`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-`
+`;

@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useCallback } from "react";
-import { SvgElementsContext } from "globalState/svgElementsProvider/index";
+import { ControlStateContext } from "globalState/controlState/index";
+import { PointsContext } from "globalState/points/index";
 
 function Lines() {
   // global state
-  const { points, linePath, setLinePath } = useContext(SvgElementsContext);
+  const { linePath, setLinePath } = useContext(ControlStateContext);
+  const { points } = useContext(PointsContext);
 
   const createSVGPathString = useCallback(
     pointList => {

@@ -1,21 +1,23 @@
 import React, { useContext } from "react";
-import { SvgElementsContext } from "globalState/svgElementsProvider/index";
+import { ControlStateContext } from "globalState/controlState/index";
+import { PointsContext } from "globalState/points/index";
 import { StyledCircle } from "./styles";
+import { TouchScreenDetectionContext } from 'globalState/touchScreenDetection/index'
 
 function Circle({ circle, i }) {
   // global state
   const {
-    setIsOver,
+    setIsOverCircle,
     setCurrentCircle,
-    updateCircle,
-    unHighlightAll,
     selectedCircle,
     setSelectedCircle
-  } = useContext(SvgElementsContext);
+  } = useContext(ControlStateContext);
+  const { updateCircle, unHighlightAll } = useContext(PointsContext);
+  const { isTouchScreen } = useContext(TouchScreenDetectionContext)
 
   const handleMouseEnter = async () => {
     updateCircle(i, { isHovering: true });
-    setIsOver(true);
+    setIsOverCircle(true);
   };
 
   const handleMouseDown = () => {
@@ -33,7 +35,7 @@ function Circle({ circle, i }) {
       onMouseUp={() => setCurrentCircle(null)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={unHighlightAll}
-      isHovering={circle.isHovering}
+      isHovering={circle.isHovering && !isTouchScreen}
       selected={i === selectedCircle}
     />
   );

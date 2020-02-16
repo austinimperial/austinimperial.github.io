@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { SvgElementsContext } from "globalState/svgElementsProvider/index";
+import { ControlStateContext } from "globalState/controlState/index";
 import styled from "styled-components";
 const _ = require("lodash");
 
@@ -11,17 +11,15 @@ export const StyledBackgroundRect = styled.rect`
 
 function BackgroundRect() {
   // global state
-  const { 
-    setIsOver, 
-    canAdd, 
-    setSelectedCircle
-  } = useContext(SvgElementsContext);
+  const { setIsOverCircle, canAdd, setSelectedCircle } = useContext(
+    ControlStateContext
+  );
 
   return (
     <StyledBackgroundRect
-      onMouseMove={_.throttle(() => setIsOver(false), 50)}
+      onMouseMove={_.throttle(() => setIsOverCircle(false), 50)}
       onClick={() => {
-        setIsOver(false);
+        setIsOverCircle(false);
         if (!canAdd) setSelectedCircle(null);
       }}
     />

@@ -1,18 +1,16 @@
 import React, { useContext } from "react";
 import { StyledText, StyledContainer, StyledSvgContainer } from "./styles";
 import { ScreenSizesContext } from "globalState/screenSizes/index";
-import { SvgElementsContext } from 'globalState/svgElementsProvider/index'
+import { ControlStateContext } from "globalState/controlState/index";
 
 function Logo() {
   // global state
   const { xxs, xs, sm, md, lg, xl } = useContext(ScreenSizesContext);
-  const { setIsOverSvg } = useContext(SvgElementsContext)
+  const { setIsOverSvg } = useContext(ControlStateContext);
 
   if (xxs || xs || sm) {
     return (
-      <StyledContainer 
-        onMouseMove={() => setIsOverSvg(false)}
-      >
+      <StyledContainer onMouseMove={() => setIsOverSvg(false)}>
         <StyledSvgContainer>
           <svg viewBox="0 0 430 100" width="100%">
             <StyledText y="60">quick-blob-svg</StyledText>

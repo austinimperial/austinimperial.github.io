@@ -1,11 +1,13 @@
 import React, { useContext, useRef, useEffect } from "react";
 import Circle from "components/circle/index";
-import { SvgElementsContext } from "globalState/svgElementsProvider/index";
+import { ControlStateContext } from "globalState/controlState/index";
 import Lines from "components/lines/index";
 import GuideLines from "components/guideLines/index";
 import Blob from "components/blob/index";
 import { StyledContainerSVG } from "./styles";
 import { ScreenSizesContext } from "globalState/screenSizes/index";
+import { TouchScreenDetectionContext } from 'globalState/touchScreenDetection/index'
+import { PointsContext } from "globalState/points/index";
 import BackgroundRect from "components/backgroundRect/index";
 import Logo from "components/logo/index";
 
@@ -13,22 +15,23 @@ function SvgBackground() {
   // global state
   const {
     setMouseDown,
-    points,
     showLines,
     canAdd,
     setDownloadPrompt,
     setIsOverSvg,
     setSvgBackgroundRef
-  } = useContext(SvgElementsContext);
+  } = useContext(ControlStateContext);
+  const { points } = useContext(PointsContext);
+  const { isTouchScreen } = useContext(TouchScreenDetectionContext)
 
   const { md, lg, xl, prevScreenSize } = useContext(ScreenSizesContext);
 
   // ref
-  const backgroundRef = useRef()
+  const backgroundRef = useRef();
 
   useEffect(() => {
-    setSvgBackgroundRef(backgroundRef)
-  },[prevScreenSize,setSvgBackgroundRef])
+    setSvgBackgroundRef(backgroundRef);
+  }, [prevScreenSize, setSvgBackgroundRef]);
 
   return (
     <div
@@ -45,7 +48,7 @@ function SvgBackground() {
         {(md || lg || xl) && <Logo />}
         <Blob />
         {showLines && <Lines />}
-        {showLines && canAdd && <GuideLines />}
+        {showLines && canAdd && !isTouchScreen && <GuideLines />}
         {showLines &&
           points.map((circle, i) => {
             return <Circle key={Math.random()} i={i} circle={circle} />;
